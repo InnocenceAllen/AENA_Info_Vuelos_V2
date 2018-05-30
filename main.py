@@ -43,4 +43,12 @@ if __name__ == "__main__":
     #print("{" + "\n".join("{}: {}".format(k, v) for k, v in flightsDict.items()) + "}")
 
     flightsDict = analyze(flights, 'dep_airport_name');
-    print("{" + "\n".join("{}: {}".format(k, v) for k, v in flightsDict.items()) + "}")
+    #print("{" + "\n".join("{}: {} ->".format(key, value,) for key, value in flightsDict.items()) + "}")
+
+    for key, value in flightsDict.items():
+        positivo=value['positivo']
+        negativo = value['negativo']
+        positivoPercent = positivo / float(positivo + negativo)*100
+        negativoPercent = negativo / float(positivo + negativo)*100
+        print (key +" ->Positivos: "+str(positivoPercent)+"% Negativos "+str(negativoPercent)+"%");
+
