@@ -1,4 +1,5 @@
 import pandas as pd
+from datetime import datetime, date
 
 from pylab import figure, title, xlabel, ylabel, xticks, bar, \
                   legend, axis, savefig
@@ -11,7 +12,7 @@ from pylab import figure, title, xlabel, ylabel, xticks, bar, \
 
 
 
-#podemos añadir tambien en el dict el tiempo de retraso.
+
 
 def analyze( flights,parameter):
     flightsDict=dict()
@@ -23,14 +24,28 @@ def analyze( flights,parameter):
                 tempDict['positivo']=tempDict['positivo']+1
             else:
                 tempDict['negativo'] = tempDict['negativo'] + 1
+                pos=row['dep_status'].find(':')
+                horaSalida=row['dep_status'][pos - 2:pos + 3]
+                horaPrevista=row['dep_time']
+                horaSalida = datetime.strptime(horaSalida, "%H:%M").time()
+                horaPrevista = datetime.strptime(horaPrevista, "%H:%M").time()
+                delay = datetime.combine(date.today(), horaSalida) - datetime.combine(date.today(), horaPrevista)
+                tempDict['retraso'] = tempDict['retraso'] + delay.seconds
         else:
             if row['dep_status'].find("Salida prevista"):  # cuando pone esto entiendo que sale de forma puntual 5+- min (revisar)
                 tempDict.setdefault('positivo',1)
                 tempDict.setdefault('negativo', 0)
+                tempDict.setdefault('retraso',0)
 
             else:
                 tempDict.setdefault('positivo', 0)
                 tempDict.setdefault('negativo', 1)
+                horaSalida = row['dep_status'][pos - 2:pos + 3]
+                horaPrevista = row['dep_time']
+                horaSalida=datetime.strptime(horaSalida, "%H:%M").time()
+                horaPrevista = datetime.strptime(horaPrevista, "%H:%M").time()
+                delay=datetime.combine(date.today(), horaSalida) - datetime.combine(date.today(), horaPrevista)
+                tempDict.setdefault('retraso',delay.seconds)
 
         flightsDict[row[parameter]]=tempDict
     return flightsDict
@@ -84,11 +99,13 @@ if __name__ == "__main__":
 
         positivo=value['positivo']
         negativo = value['negativo']
-        positivoPercent = positivo / float(positivo + negativo)*100
-        negativoPercent = negativo / float(positivo + negativo)*100
+        retrasoMedio = round((value['retraso']/negativo)/float(60),2)
+
+        positivoPercent = round(positivo / float(positivo + negativo)*100,2)
+        negativoPercent = round(negativo / float(positivo + negativo)*100,2)
         keyList.append(key)
         positiveList.append(round(positivoPercent,2))
         negativeList.append(round(negativoPercent,2))
 
-        print (key +" ->Positivos: "+str(positivoPercent)+"% Negativos "+str(negativoPercent)+"%");
-    plot(keyList,positiveList,negativeList)
+        print (key +" ->Positivos: "+str(positivoPercent)+"% Negativos "+str(negativoPercent)+"% Retraso medio "+str(retrasoMedio)+" Min");
+    #plot(keyList,positiveList,negativeList)
