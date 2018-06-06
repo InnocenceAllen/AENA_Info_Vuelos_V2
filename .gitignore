@@ -103,4 +103,5 @@ ENV/
 # mypy
 .mypy_cache/
 *.csv
-!infovuelos_sample.csv
+!airports.csv
+
