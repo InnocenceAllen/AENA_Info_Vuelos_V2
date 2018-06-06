@@ -104,4 +104,4 @@ ENV/
 .mypy_cache/
 *.csv
 !airports.csv
-
+!flights.csv
