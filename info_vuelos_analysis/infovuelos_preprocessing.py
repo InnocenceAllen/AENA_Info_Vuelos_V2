@@ -1,9 +1,11 @@
 import datetime
 import logging as log
-import time
 from datetime import datetime, date, timedelta
 import pandas as pd
 import numpy as np
+import io
+import requests
+
 
 from info_vuelos_analysis import constants
 
@@ -34,7 +36,12 @@ def main():
     airports = get_airports()
     log.info('Loading airports info')
     log.info(''.join(str(a) + '; ' for a in airports))
-    flights_raw = pd.read_table('../infovuelos_sample.csv', sep=';')
+
+    # load original dataset
+    url = "https://raw.githubusercontent.com/InnocenceAllen/AENA_Info_Vuelos/master/infovuelos_sample.csv"
+    content=requests.get(url).content
+    #flights_raw = pd.read_table('../infovuelos_sample.csv', sep=';')
+    flights_raw = pd.read_table(io.StringIO(content.decode('utf-8')), sep=';')
 
     # Eliminamos vuelos duplicados
     flights = flights_raw.drop_duplicates(['flightNumber', 'dep_date'], keep='last')
