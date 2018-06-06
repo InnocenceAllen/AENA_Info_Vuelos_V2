@@ -85,12 +85,12 @@ if __name__ == "__main__":
 
     flights = pd.read_table('infovuelos_sample.csv', sep=';')
     # Eliminamos vuelos duplicados
-    flights = flights.drop_duplicates('flightNumber')
+    flights = flights.drop_duplicates(['flightNumber', 'dep_date'], keep='last')
 
-    #flightsDict=analyze(flights,'flightNumber');
-    #print("{" + "\n".join("{}: {}".format(k, v) for k, v in flightsDict.items()) + "}")
 
-    flightsDict = analyze(flights, 'dep_airport_name');
+    flightsDict=analyze(flights,'flightNumber');
+
+
     #print("{" + "\n".join("{}: {} ->".format(key, value,) for key, value in flightsDict.items()) + "}")
     keyList=[]
     positiveList=[]
