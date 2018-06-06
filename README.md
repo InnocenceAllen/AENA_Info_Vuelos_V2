@@ -106,9 +106,9 @@ Estas características en la forma de registrar los datos tienen algunas implica
 
 ## Limpieza de los datos.
 
-En general, los datos incluidos en el dataset elegido están bastante limpios, pues se realizó un procesamiento básico durante el proceso de recogida de los mismos (durante el web scraping), sin embargo todavía hay algunos aspectos  a tener en cuenta para el correcto tratamiento de los datos.
+En general, los datos incluidos en el dataset elegido están bastante limpios, pues ya se realizó un pre-procesamiento  durante el proceso de obtención de los mismos (como parte del proceso de web scraping), sin embargo todavía hay algunos aspectos  a tener en cuenta para facilitar la utilización de los datos y sacarles el máximo partido posible.
 
-En primer lugar, hay valores faltantes, aunque por suerte, dichos elementos ya fueron identificados durante la captura de los datos, y son fáciles de identificar pues aparecen codificados con un guión simple ("-") . Típicamente, los vuelos internacionales, suelen carecer de los detalles del vuelo para el aeropuerto fuera de territorio español. Por ejemplo, el vuelo AAL743 entre Barcelona y Filadelfia (EEUU).
+En primer lugar, hay valores faltantes, aunque por suerte, dichos elementos ya fueron identificados durante la captura de los datos, y son fáciles de identificar pues aparecen codificados con un guión simple ("-") . El caso más habitual es de los vuelos internacionales,  que carecen de los detalles del vuelo para el aeropuerto fuera de territorio español. Por ejemplo, ara el vuelo AAL743 entre Barcelona y Filadelfia (EEUU) sólo tenemos los datos relativos a la salida, pero no sabemos nada de la llegada, más que el aeropuerto de destino.
 
 	AAL743	 AIRBUS A330-200	14/04/18	12:50	BARCELONA-EL PRAT	BCN	T1	El vuelo ha despegado a las 13:39	13	17	Lluvia	355 - 364	B62	-	-	FILADELFIA	PHL	-	-	-	-	-	-	-	2018-04-14 15:36:11
 
@@ -127,12 +127,38 @@ Adicionalmente habrá que detectar otro posible circunstancia, la de vuelos canc
 
 ### ¿Los datos contienen ceros o elementos vacíos? ¿Cómo gestionarías cada uno de estos casos?
 
+Ya hemos comentado antes que efectivamente existen valores faltantes, identificador por un guión en los registros de datos, independientemente de si es un campo de texto o numérico.
+
 ### Identificación y tratamiento de valores extremos.
 
-
+No hemos identificado valores extremos.
 
 ## Análisis de los datos.
+
 ### Selección de los grupos de datos que se quieren analizar/comparar (planificación de los análisis a aplicar).
+
+Para esta práctica hemos decidido centrarnos en 2 áreas de análisis:
+1. El análisis cuantitativo del tráfico de aviones, cuya principal variable de estudio es el número de vuelos registrados en uno o más aeropuertos. Además, vamos a distinguir entre vuelos internacionales y nacionales. Finalmente, usaremos como variables de agrupación el aeropuerto de origen o destino,  la compañía aérea y el tipo de avión.
+2. Los retrasos producidos en el aterrizaje o despegue, y su relación con otras variables como el horario, la compañía, el aeropuerto, el tipo de avión y la climatología.
+
+El número de vuelos lo podemos obtener directamente  mediante el conteo de registros, una vez detectados y tratados los duplicados, tal y como hemos explicado en una sección previa. Así mismo, queremos distinguir entre vuelos nacionales e internacionales, pero este dato no lo tenemos disponible directamente en el dataset, así es que habrá que averiguarlo a partir del análisis de los datos disponibles.
+
+Los retrasos producidos en un vuelo tampoco no se hallan representados directamente en el dataset, aunque como ya hemos comentado se pueden calcular a partir del horario previsto y la información proporcionada en el estado del vuelo. 
+
+Tras establecer el alcance de este proyecto hemos decidido utilizar las siguientes variables o atributos de los datos, algunos disponibles directamente y otros que habrá que generar antes de proceder al análisis.
+
+- Número de vuelo, el cual sirve de identificador (String)
+- Modelo de avión (String)
+- Compañía aérea (String)
+- Aeropuerto de salida y llegada (String)
+- Fecha y hora de salida (Datetime)
+- Fecha y hora de llegada (Datetime)
+- Retraso en el despegue y el aterrizaje, en minutos (Integer)
+- Si es vuelo nacional o internacional (Boolean)
+- Temperatura Max y Min, en grados (Integer)
+- Descripción textual del clima (String)
+
+
 ### Comprobación de la normalidad y homogeneidad de la varianza.
 ### Aplicación de pruebas estadísticas para comparar los grupos de datos. En función de los datos y el objetivo del estudio, aplicar pruebas de contraste de hipótesis, correlaciones, regresiones, etc.
 ## Representación de los resultados a partir de tablas y gráficas.
