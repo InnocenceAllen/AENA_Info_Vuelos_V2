@@ -45,7 +45,7 @@ def get_arrival_delay(row):
     return delay
 
 
-def main():
+def preprocessing():
     airports = get_airports()
     log.info('Loading airports info')
     log.info(''.join(str(a) + '; ' for a in airports))
@@ -92,4 +92,4 @@ if __name__ == "__main__":
                     level=log.INFO,
                     format='%(asctime)s %(message)s',
                     datefmt='%d/%m/%Y %I:%M:%S')
-    main()
+    preprocessing()
