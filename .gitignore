@@ -105,3 +105,5 @@ ENV/
 *.csv
 !airports.csv
 !flights.csv
+
+info_vuelos_analysis/*.png
