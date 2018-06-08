@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 #Import flights dataset
 flights = pd.read_csv('flights.csv',sep=';');
@@ -43,7 +44,7 @@ labels = 'Internacionales', 'Nacionales'
 # Weather
 
 weather = flights['dep_weather_desc'].value_counts(normalize = True);
-weather.plot(kind = 'bar', legend = False);
+#weather.plot(kind = 'bar', legend = False);
 #plt.title('Frecuencia del estado del tiempo a la salida del vuelo')
 #plt.xlabel('Clima')
 #plt.ylabel('Frecuencia de vuelos efectuados')
@@ -54,11 +55,23 @@ weather.plot(kind = 'bar', legend = False);
 delay = flights['dep_delay'] > 30
 df_big_delay = flights[delay]
 weather_delay = df_big_delay['dep_weather_desc'].value_counts();
-weather_delay.plot(kind = 'bar', legend = False);
-plt.title('Clima en grandes retrasos')
-plt.xlabel('Clima')
-plt.ylabel('Cantidad de vuelos demorados mas de 30 mins')
+#weather_delay.plot(kind = 'bar', legend = False);
+#plt.title('Clima en grandes retrasos')
+#plt.xlabel('Clima')
+#plt.ylabel('Cantidad de vuelos demorados mas de 30 mins')
+#plt.show();
+
+
+#Companies
+flights['company'] = np.random.randint(1, 6, flights.shape[0])
+#print(flights)
+companies = flights['company'].value_counts();
+labels = '1', '2', '3', '4', '5', '6'
+companies.plot(kind = 'pie',autopct='%1.1f%%',labels=labels,legend = False);
+plt.title('Porciento de vuelos por compannia')
 plt.show();
+
+
 
 
 
