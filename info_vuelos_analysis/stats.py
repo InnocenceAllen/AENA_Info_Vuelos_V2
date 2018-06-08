@@ -9,7 +9,6 @@ flights_time = flights.dropna(subset=['dep_time'])
 hours = flights_time['dep_time'].str.replace(':', '').astype(int)
 day_time = []
 for x in hours:
-    print(x)
     if (x >= 500 and x < 1200):
         day_time.append('Mannana')
     elif (x >= 1200 and x < 1800):
@@ -37,8 +36,17 @@ group_aerop = group_aerop['arr_airport_code'].value_counts(normalize = True);
 inter =flights['arr_int'].value_counts(normalize=True);
 #colors = ['black', 'white']
 labels = 'Internacionales', 'Nacionales'
-inter.plot(kind = 'pie',autopct='%1.1f%%',labels=labels,legend = False);
-plt.title('Frecuencia vuelos Nacionales Internacionales')
+#inter.plot(kind = 'pie',autopct='%1.1f%%',labels=labels,legend = False);
+#plt.title('Frecuencia vuelos Nacionales Internacionales')
+#plt.show();
+
+# Weather
+
+weather = flights['dep_weather_desc'].value_counts(normalize = True);
+weather.plot(kind = 'bar', legend = False);
+plt.title('Frecuencia del estado del tiempo a la salida del vuelo')
+plt.xlabel('Clima')
+plt.ylabel('Frecuencia de vuelos efectuados')
 plt.show();
 
 
