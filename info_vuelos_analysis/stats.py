@@ -44,10 +44,22 @@ labels = 'Internacionales', 'Nacionales'
 
 weather = flights['dep_weather_desc'].value_counts(normalize = True);
 weather.plot(kind = 'bar', legend = False);
-plt.title('Frecuencia del estado del tiempo a la salida del vuelo')
+#plt.title('Frecuencia del estado del tiempo a la salida del vuelo')
+#plt.xlabel('Clima')
+#plt.ylabel('Frecuencia de vuelos efectuados')
+#plt.show();
+
+
+#Weather delay
+delay = flights['dep_delay'] > 30
+df_big_delay = flights[delay]
+weather_delay = df_big_delay['dep_weather_desc'].value_counts();
+weather_delay.plot(kind = 'bar', legend = False);
+plt.title('Clima en grandes retrasos')
 plt.xlabel('Clima')
-plt.ylabel('Frecuencia de vuelos efectuados')
+plt.ylabel('Cantidad de vuelos demorados mas de 30 mins')
 plt.show();
+
 
 
 
