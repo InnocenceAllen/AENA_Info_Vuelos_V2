@@ -134,7 +134,8 @@ Ya hemos comentado antes que efectivamente existen valores faltantes, identifica
 No hemos identificado valores extremos.
 
 ## Análisis de los datos.
-
+Para realizar el análisis de los datos ya tratados, hemos creado una función con tal de conseguir la cantidad de positivos, vuelos sin retraso, y negativos, vuelos con retraso, así como el tiempo total de retraso que ha tenido esa compañía. Con esta información podemos realizar predicciones para saber si un determinado vuelo tendrá retraso y también nos permite realizar un estudio para saber por aeropuertos de salida, llegada, compañías, códigos de vuelo el retraso que han tenido en un terminado periodo. Esto nos permitiría poner medidas para subsanar estos retrasos y saber la evolución que están teniendo.
+También, podemos obtener información respecto a como ha efectuado la climatología en los vuelos o conocer si una compañía ha aumentado o disminuido a nivel de transito de viajeros, teniendo en cuenta el tipo de avión, o de vuelos.
 ### Selección de los grupos de datos que se quieren analizar/comparar (planificación de los análisis a aplicar).
 
 Para esta práctica hemos decidido centrarnos en 2 áreas de análisis:
@@ -163,4 +164,4 @@ Tras establecer el alcance de este proyecto hemos decidido utilizar las siguient
 ### Aplicación de pruebas estadísticas para comparar los grupos de datos. En función de los datos y el objetivo del estudio, aplicar pruebas de contraste de hipótesis, correlaciones, regresiones, etc.
 ## Representación de los resultados a partir de tablas y gráficas.
 ## Resolución del problema. A partir de los resultados obtenidos, ¿cuáles son las conclusiones? ¿Los resultados permiten responder al problema?
-## Código: Hay que adjuntar el código, preferiblemente en R, con el que se ha realizado la limpieza, análisis y representación de los datos. Si lo preferís, también podéis trabajar en Python.
+
