@@ -1,0 +1,48 @@
+code;name;alias;runways;region
+MAD;Adolfo Suárez Madrid-Barajas;Barajas;4;Comunidad de Madrid
+ABC;Albacete;Los Llanos;1;Castilla-La Mancha
+ALC;Alicante-Elche;El Altet;1;Comunidad Valenciana
+LEI;Almería;El Alquián;1;Andalucía
+OVD;Asturias;Ranón / Santiago del Monte;1;Asturias
+BJZ;Badajoz;Talavera la Real;1;Extremadura
+BCN;Barcelona-El Prat;El Prat;3;Cataluña
+BIO;Bilbao;Lujua / La Paloma;2;País Vasco
+RGS;Burgos;Villafría;1;Castilla y León
+ODB;Córdoba;Córdoba;1;Andalucía
+VDE;El Hierro;Los Cangrejos;1;Canarias
+GRX;Federico García Lorca Granada-Jaén;Chauchina / Santa Fe;1;Andalucía
+FUE;Fuerteventura;Puerto del Rosario / El Matorral;2;Canarias
+GRO;Gerona-Costa Brava;Gerona;1;Cataluña
+LPA;Gran Canaria;Gando;2;Canarias
+HSK;Huesca-Pirineos;Monflorite;2;Aragón
+IBZ;Ibiza;Es Codolar;1;Baleares
+XRY;Jerez;La Parra;1;Andalucía
+LCG;La Coruña;Alvedro;1;Galicia
+GMZ;La Gomera;La Gomera;1;Canarias
+SPC;La Palma;Mazo;1;Canarias
+ACE;Lanzarote;Guacimeta / San Bartolomé;1;Canarias
+LEN;León;Virgen del Camino;1;Castilla y León
+RJL;Logroño-Agoncillo;Agoncillo;1;La Rioja
+MCV;Madrid-Cuatro Vientos;Cuatro Vientos;1;Comunidad de Madrid
+AGP;Málaga-Costa del Sol;Pablo Picasso;2;Andalucía
+MLN;Melilla;Melilla;1;Ciudad Autónoma de Melilla
+MAH;Menorca;Mahón;1;Baleares
+MJV;Murcia-San Javier;San Javier;2;Región de Murcia
+PMI;Palma de Mallorca;Son Sant Joan;2;Baleares
+PNA;Pamplona;Noáin;1;Navarra
+REU;Reus;Reus;1;Cataluña
+QSA;Sabadell;Sabadell;1;Cataluña
+SLM;Salamanca;Matacán;1;Castilla y León
+EAS;San Sebastián;Fuenterrabía;1;País Vasco
+SCQ;Santiago de Compostela;Lavacolla;1;Galicia
+SDR;Seve Ballesteros-Santander;Parayas;1;Cantabria
+SVQ;Sevilla;San Pablo;2;Andalucía
+SBO;Son Bonet;Son Bonet;1;Baleares
+TFN;Tenerife Norte;Los Rodeos;1;Canarias
+TFS;Tenerife Sur;Reina Sofía;1;Canarias
+VLC;Valencia;Manises;1;Comunidad Valenciana
+VLL;Valladolid;Villanubla;1;Castilla y León
+VGO;Vigo;Peinador;1;Galicia
+VIT;Vitoria;Foronda;1;País Vasco
+ZAZ;Zaragoza;Zaragoza;2;Aragón
+JCU;Ceuta;Ceuta;1;Ciudad Autónoma de Ceuta
