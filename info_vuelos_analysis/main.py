@@ -191,19 +191,27 @@ if __name__ == "__main__":
     flights = flights.drop_duplicates(['flightNumber', 'dep_date'], keep='last')
 
     flightsDict=analyze(flights,'flightNumber','dep_delay');
-    resultado = sorted(flightsDict.items(), key=lambda x: x[1]['negativo'], reverse=True)
-    print(resultado)
+    #resultado = sorted(flightsDict.items(), key=lambda x: x[1]['negativo'], reverse=True)
+    #print(resultado)
     keyList, positiveList, negativeList = result(flightsDict,1)
     plot('flightNumber',keyList[:6],positiveList[:6],negativeList[:6])
 
 
     flightsDict = analyze(flights, 'dep_airport_code', 'dep_delay');
-    resultado = sorted(flightsDict.items(), key=lambda x: x[1]['negativo'], reverse=True)
-    print(resultado)
+    #resultado = sorted(flightsDict.items(), key=lambda x: x[1]['negativo'], reverse=True)
+    #print(resultado)
     keyList, positiveList, negativeList = result(flightsDict, 1)
     plot('dep_airport_code', keyList, positiveList, negativeList)
 
-    classifier(flights)
+    flightsDict = analyze(flights, 'company', 'dep_delay');
+    #resultado = sorted(flightsDict.items(), key=lambda x: x[1]['negativo'], reverse=True)
+    #print(resultado)
+    keyList, positiveList, negativeList = result(flightsDict, 1)
+    plot('company', keyList[:10], positiveList[:10], negativeList[:10])
+
+
+
+    #classifier(flights)
 
 
 

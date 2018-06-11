@@ -169,7 +169,34 @@ Tras establecer el alcance de este proyecto hemos decidido utilizar las siguient
 
 ### Comprobación de la normalidad y homogeneidad de la varianza.
 ### Aplicación de pruebas estadísticas para comparar los grupos de datos. En función de los datos y el objetivo del estudio, aplicar pruebas de contraste de hipótesis, correlaciones, regresiones, etc.
+La principal pregunta que queremos responder es saber si un vuelo tendrá retraso, para ello hemos realizado dos clasificadores.
+
+El primero de ellos se trata de un clasificador bayesiano que hemos desarrollado utilizando los campos aeropuerto de salida, código de vuelo. No obstante está preparado para utilizar los parámetros que se desee. Los resultados que obtenemos teniendo un total de 10338 vuelos distribuidos en dos conjuntos de datos. 85% de datos para training y el 15% restante para test. El resultado obtenido es el siguiente.
+
+**Accuracy:** 0.82%
+
+**Precision:** 0.85%
+
+El segundo clasificador hemos utilizado la librería sklearn....
+
 ## Representación de los resultados a partir de tablas y gráficas.
+
+Hemos querido realizar un estudio para conocer los retrasos que han habido por aeropuerto, código de vuelo o según el parámetro que se solicite. Esto lo hemos realizado contabilizando la cantidad de retrasos que ha habido por vuelo, según el parámetro dado.
+
+![Retrasos por flightNumber](images/flightNumber_plot.png)
+
+Como podéis observar, en la gráfica se visualizan los retrasos respecto el código de  6 vuelos. Como veis un par de vuelos tienen un 100% de retrasos.
+
+![Retrasos por company](images/company_plot.png)
+En la gráfica anterior se puede apreciar el retraso de 10 compañías y deslumbrar el compromiso que estas tienen con la puntualidad.
+
+![Retrasos por dep_airport](images/dep_airport_code_plot.png)
+
+En esta gráfica podéis ver los retrasos que ha habido respecto los aeropuertos de origen.
+
+Con un conjunto más amplio podríamos realizar un estudio de la evolución que ha habido tras aplicar algunas mejoras o penalizaciones en los aeropuertos o aerolíneas.
+
+
 Los horarios en que despegan los vuelos varían mucho dentro de las 24 horas del día. Para una mejor noción del momento en que ocurren estos vuelos, se agrupan en tres subconjuntos, mañana, tarde y noche. De esta manera se puede conocer en que momento del día ocurren más vuelos. Durante este período de tiempo, suelen existir mas vuelos en el horario de la mañana que en cualquier otro momento.
 
 ![Vuelos por horarios](images/por_horario.png)
