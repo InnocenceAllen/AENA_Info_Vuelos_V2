@@ -55,15 +55,17 @@ def preprocessing():
     # log.info('Loading data from url: {}'.format(url))
     # content = requests.get(url).content
     # flights_raw = pd.read_table(io.StringIO(content.decode('utf-8')), sep=constants.CSV_DELIMITER)
-    log.info('Loading data from file: {}'.format(constants.RAW_DATASET))
-    flights_raw = pd.read_table(constants.RAW_DATASET, sep=constants.CSV_DELIMITER, encoding = 'ISO-8859-1')
+    log.info('Loading data from file: {}'.format(constants.DATASET_FILENAME))
+    flights_raw = pd.read_table(constants.DATASET_FILENAME, sep=constants.CSV_DELIMITER)
     log.info('Original data has {} rows'.format(len(flights_raw.index)))
-    #print(list(flights_raw)))
+    flights_raw.info()
 
     # Eliminamos vuelos duplicados
     log.info("Removing duplicates")
-    flights = flights_raw.drop_duplicates(['flightNumber', 'dep_date'], keep='last')
+    flights_raw.sort_values(by=['timestamp'], ascending=True)
+    flights = flights_raw.copy().drop_duplicates(['flightNumber', 'dep_date', 'dep_time'], keep='last')
     log.info("Cleaned data has {} rows".format(len(flights.index)))
+    flights.info()
 
     log.info("Adding derived data")
     # Añadimos campos que indican si se trata de un vuelo internacional
@@ -75,13 +77,14 @@ def preprocessing():
     flights.loc[:, 'arr_delay'] = flights.apply(get_arrival_delay, axis=1)
 
     # Nos quedamos solo con los campos (columnas del dataframe) que nos interesan
-    log.info("Keeping selected fields")
+    log.info("Keeping selected fields: {}".format(constants.DATA_FIELDS))
     flights = flights[constants.DATA_FIELDS]
     # flights.drop(constants.FIELDS_DISCARDED)
 
     # Asignamos NaN a los valores "-"
     log.info("Marking NaN values")
     flights = flights.replace('-', np.nan)
+    flights.info()
 
     # Guardamos los datos modificados en un archivo
     filename = 'flights.csv'
