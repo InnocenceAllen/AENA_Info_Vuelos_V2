@@ -88,7 +88,7 @@ def main():
     # arrivals.info()
     log.info('Arrivals:  {} rows x {} columns'.format(arrivals.shape[0], arrivals.shape[1]))
 
-    # apply_analysis(departures, "Departures")
+    apply_analysis(departures, "Departures")
     apply_analysis(arrivals, "Arrivals")
 
 if __name__ == "__main__":

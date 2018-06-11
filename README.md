@@ -1,4 +1,4 @@
-#AENA Info Vuelos V2
+# AENA Info Vuelos V2
 
 ## 1. Descripción del dataset.
 
@@ -308,31 +308,31 @@ Finalmente,  hemos probado una técnica de **escalado**, en este caso sobre los 
 
 La siguiente imagen muestra los diferentes niveles de accuracy obtenidos con los 9 clasificadores probados, sobre los vuelos, pero limitados a la información de las salidas o despegues.
 
-![ Comparativa de clasificadores para las salidas](/home/mario/Workspace/UOC-TiCiViDa/AENA_Info_Vuelos_V2/images/departures-classifiers.png  "Comparativa de clasificadores para las salidas")
+![ Comparativa de clasificadores para las salidas](images/departures-classifiers.png  "Comparativa de clasificadores para las salidas")
 
 Como se puede ver el mejor clasificador ha resultado ser el #6, que como vemos en el listado anterior ha empleado el algoritmo AdaBoost, con una precisión media de 0.47.
 
 En la siguiente imagen podemos ver con más detalle como se ha repartido dicha precisión entre los diferentes valores de la variable objetivo (nivel de retraso)
 
-![Precisión del clasificador AdaBoost para las salidas](/home/mario/Workspace/UOC-TiCiViDa/AENA_Info_Vuelos_V2/images/departures-adaboost.png) 
+![Precisión del clasificador AdaBoost para las salidas](images/departures-adaboost.png) 
 
 Este clasificador como vemos funcioa muy bien para predecir cuando no va a producirse retraso, pero falla bastante prediciendo el nivel de retraso que podría producirse en caso contrario.
 
 Otro clasificador más equilibrado en cuanto a su precisión ha resultado ser el de Decision Trees, con el siguiente resultado
 
-![Precisión del clasificador DecisionTree para las salidas](/home/mario/Workspace/UOC-TiCiViDa/AENA_Info_Vuelos_V2/images/departures-decision_tree.png) 
+![Precisión del clasificador DecisionTree para las salidas](images/departures-decision_tree.png) 
 
 A continuación vemos la comparativa en términos de precisión media de los diferentes clasificadores para las llegadas.
 
-![ Comparativa de clasificadores para las llegadas](/home/mario/Workspace/UOC-TiCiViDa/AENA_Info_Vuelos_V2/images/arrivals-classifiers.png  "Comparativa de clasificadores para las llegadas")
+![ Comparativa de clasificadores para las llegadas](images/arrivals-classifiers.png  "Comparativa de clasificadores para las llegadas")
 
 Como podemos ver en la gráfica, en este caso el mejor clasificador general ha sido el 5 y el 7,  Perceptrón multicapa y Naive Bayes, , con precisiones medias cercanas a 0.65, pero si analizamos la precisión separada por categorías veremos que en ambos casos toda la precisión se concentra en acertar cuando no se produce retraso, pero falla estrepitosamente en los otros casos. Se muestra el caso del Naive Bayes como ejemplo.
 
-![Precisión del clasificador Naive Bayes para las llegadas](/home/mario/Workspace/UOC-TiCiViDa/AENA_Info_Vuelos_V2/images/arrivals-naive_bayes.png)
+![Precisión del clasificador Naive Bayes para las llegadas](images/arrivals-naive_bayes.png)
 
 El clasificador más equilibrado en este caso ha resultado ser de nuevo el Decision Tree, como vemos en la siguiente gráfica.
 
-![Precisión del clasificador Decision Tree para las llegadas](/home/mario/Workspace/UOC-TiCiViDa/AENA_Info_Vuelos_V2/images/arrivals-decision_tree.png)
+![Precisión del clasificador Decision Tree para las llegadas](images/arrivals-decision_tree.png)
 
 Vistas las diferencias entre clasificadores, posiblemente podríamos mejorar los resultados utilizando un Ensemble, es decir, una combinación de varios clasificadores.
 
