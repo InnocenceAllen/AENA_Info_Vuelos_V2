@@ -18,14 +18,15 @@ from sklearn.tree import DecisionTreeClassifier
 from info_vuelos_analysis.model import DelayLevel
 
 
-names = ["Nearest Neighbors", "Linear SVM", "RBF SVM",
-         # "Gaussian Process",
-         "Decision Tree", "Random Forest", "Neural Net", "AdaBoost",
-         "Naive Bayes", "QDA"]
+names = ['Nearest Neighbors', 'Linear SVM', 'RBF SVM',
+         # 'Gaussian Process',
+         'Decision Tree', 'Random Forest', 'Neural Net', 'AdaBoost',
+         'Naive Bayes', 'QDA']
+no_sparse = ['Naive Bayes', 'QDA']
 
 classifiers = [
     KNeighborsClassifier(3),
-    SVC(kernel="linear", C=0.025),
+    SVC(kernel='linear', C=0.025),
     SVC(gamma=2, C=1),
     # GaussianProcessClassifier(1.0 * RBF(1.0)),
     DecisionTreeClassifier(max_depth=5),
@@ -73,14 +74,15 @@ def scale_data(data):
     return scaled_data
 
 
-def apply_classifiers(X_train, X_test, y_train, y_test):
+def apply_classifiers(X_train, X_test, y_train, y_test, sparse = False):
     scores = []
     for name, model in zip(names, classifiers):
         log.info("Applyng {} classifier".format(name))
-        model.fit(X_train, y_train)
-        test_score = model.score(X_test, y_test)
-        scores.append(test_score)
-        log.info("Test accuray for {} = {}".format(name, test_score))
+        if not sparse or not name in no_sparse:
+            model.fit(X_train, y_train)
+            test_score = model.score(X_test, y_test)
+            scores.append(test_score)
+            log.info("Test accuray for {} = {}".format(name, test_score))
         # accuracy_plot(X_train, y_train, clf, 'Training')
         # accuracy_plot(X_test, y_test, model, name, 'Testing')
     accuracy_comparison_plot(scores, names)
@@ -109,6 +111,9 @@ def accuracy_plot(features, target, model, model_name, set):
 
 def accuracy_comparison_plot(scores, names):
 
-    # Plot the scores as a bar chart
+    plt.figure()
     plt.plot(scores)
+    plt.ylabel('Accuracy')
+    plt.xlabel('Classifier')
+    plt.title("Comparison of testing accuracy for multiple classifiers")
     plt.show()

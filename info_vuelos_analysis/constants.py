@@ -15,3 +15,5 @@ DEPARTURE_FIELDS = ['company', 'plane', 'dep_time', 'dep_airport_code',
 ARRIVAL_FIELDS = ['company', 'plane', 'arr_time', 'arr_airport_code',
                   'arr_weather_min', 'arr_weather_max', 'arr_weather_desc', 'arr_delay']
 FEATURE_NAMES = ['company', 'plane', 'time', 'airport', 't_min', 't_max', 'weather', 'delay']
+APPLY_SCALING = False
+APPLY_ONE_HOT_ENCODING = False

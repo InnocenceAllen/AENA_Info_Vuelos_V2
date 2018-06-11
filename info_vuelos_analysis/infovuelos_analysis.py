@@ -76,19 +76,22 @@ def main():
     log.info('Arrivals:  {} rows x {} columns'.format(arrivals.shape[0], arrivals.shape[1]))
 
     # Scaling temperatures
-    # temps = ['t_min','t_max']
-    # departures.loc[:, temps] = scale_data(departures[temps])
-    # arrivals.loc[:, temps] = scale_data(arrivals[temps])
-    
-    # Converting categorical variables to numerical ones
+    if constants.APPLY_SCALING:
+        temps = ['t_min','t_max']
+        departures.loc[:, temps] = scale_data(departures[temps])
+        arrivals.loc[:, temps] = scale_data(arrivals[temps])
 
-    features, target = encode_cat_ordinals(departures)
-    X_train, X_test, y_train, y_test = dataset_split(features, target, constants.TEST_SIZE, constants.RANDOM_SEED)
+    # Converting categorical variables to numerical ones
+    if constants.APPLY_ONE_HOT_ENCODING:
+        features, target = encode_cat_one_hot(departures)
+        X_train, X_test, y_train, y_test = dataset_split(features, target, constants.TEST_SIZE, constants.RANDOM_SEED)
+    else:
+        features, target = encode_cat_ordinals(departures)
+        X_train, X_test, y_train, y_test = dataset_split(features, target, constants.TEST_SIZE, constants.RANDOM_SEED)
+
     apply_classifiers(X_train, X_test, y_train, y_test)
 
-    # features, target = encode_cat_one_hot(departures)
-    # X_train, X_test, y_train, y_test = dataset_split(features, target, constants.TEST_SIZE, constants.RANDOM_SEED)
-    # apply_knn_classifier(X_train, X_test, y_train, y_test)
+
 
 
 
