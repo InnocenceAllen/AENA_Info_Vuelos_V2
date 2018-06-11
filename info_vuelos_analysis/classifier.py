@@ -5,68 +5,39 @@ import matplotlib.pyplot as plt
 import numpy as np
 import logging as log
 
-from info_vuelos_analysis import constants
+from sklearn.preprocessing import OneHotEncoder
+
 from info_vuelos_analysis.model import DelayLevel
 
-def prepare_data(data):
-    # print(data.head())
+
+def dataset_split(features, target, test_size, random_seed):
+    # Make a train/test split using predefined test size and seed
+    return train_test_split(features, target, test_size=test_size, random_state=random_seed)
+
+def encode_cat_ordinals(data):
+    log.info("Applying Label Encoder to categorical features")
     encoders = []
-    company_encoder = preprocessing.LabelEncoder()
-    company_encoder.fit(data['company'])
-    plane_encoder = preprocessing.LabelEncoder()
-    plane_encoder.fit(data['plane'])
-    airport_encoder = preprocessing.LabelEncoder()
-    airport_encoder.fit(data['airport'])
-    weather_encoder = preprocessing.LabelEncoder()
-    weather_encoder.fit(data['weather'])
-
-    encoders.append(company_encoder)
-    encoders.append(plane_encoder)
-    encoders.append(airport_encoder)
-    encoders.append(weather_encoder)
-
     features = data[['company', 'plane', 'airport', 'weather', 't_min', 't_max', 'time']].values
     for i in range(4):
-        encoder = encoders[i]
+        encoder = preprocessing.LabelEncoder()
+        encoder.fit(features[:, i])
         features[:, i] = encoder.transform(features[:, i])
+        encoders.append(encoder)
 
     target = data['delay'].values
 
-    # Make a train/test split using 30% test size
-    X_train, X_test, y_train, y_test = train_test_split(features, target,
-                                                        test_size=constants.TEST_SIZE,
-                                                        random_state=constants.RANDOM_SEED)
-    return X_train, X_test, y_train, y_test
+    return features, target
 
-def prepare_data_onehot(data):
-    # print(data.head())
-    encoders = []
-    company_encoder = preprocessing.LabelEncoder()
-    company_encoder.fit(data['company'])
-    plane_encoder = preprocessing.LabelEncoder()
-    plane_encoder.fit(data['plane'])
-    airport_encoder = preprocessing.LabelEncoder()
-    airport_encoder.fit(data['airport'])
-    weather_encoder = preprocessing.LabelEncoder()
-    weather_encoder.fit(data['weather'])
 
-    encoders.append(company_encoder)
-    encoders.append(plane_encoder)
-    encoders.append(airport_encoder)
-    encoders.append(weather_encoder)
-
-    features = data[['company', 'plane', 'airport', 'weather', 't_min', 't_max', 'time']].values
-    for i in range(4):
-        encoder = encoders[i]
-        features[:, i] = encoder.transform(features[:, i])
-
+def encode_cat_one_hot(data):
+    log.info("Applying OneHot Encoder to categorical features")
+    features, target = encode_cat_ordinals(data)
+    ordinal_features = [0, 1, 2, 3]
+    encoder = OneHotEncoder(categorical_features=ordinal_features, handle_unknown='error')
+    encoder.fit(features)
+    one_hot_features = encoder.transform(features)
     target = data['delay'].values
-
-    # Make a train/test split using 30% test size
-    X_train, X_test, y_train, y_test = train_test_split(features, target,
-                                                        test_size=constants.TEST_SIZE,
-                                                        random_state=constants.RANDOM_SEED)
-    return X_train, X_test, y_train, y_test
+    return one_hot_features, target
 
 
 def apply_knn_classifier(X_train, X_test, y_train, y_test):
@@ -112,8 +83,6 @@ def accuracy_plot(features, target, model, concept):
     plt.xticks([0, 1, 2, 3], scores.keys(), alpha=0.8);
     plt.title('Accuracies predicting Delay Levels at {}'.format(concept), alpha=0.8)
     plt.show()
-
-
 
 
 def classify(data):

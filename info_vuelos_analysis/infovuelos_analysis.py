@@ -1,13 +1,13 @@
 import logging as log
 import pandas as pd
+import sys
 
 from pathlib import Path
 
 from info_vuelos_analysis import constants
-from info_vuelos_analysis.classifier import prepare_data, apply_knn_classifier
+from info_vuelos_analysis.classifier import dataset_split, encode_cat_ordinals, encode_cat_one_hot, apply_knn_classifier
 from info_vuelos_analysis.infovuelos_preprocessing import get_airports, preprocessing
 from info_vuelos_analysis.model import DelayLevel, TimeLevel
-
 
 def get_delay_level(delay_in_minutes):
     if delay_in_minutes <= constants.DELAY_LEVEL_THRESHOLDS['NO_DELAY']:
@@ -67,22 +67,24 @@ def main():
     national_departures = flights['dep_int'] == False
     departures = select_data_fields(flights[national_departures], constants.DEPARTURE_FIELDS)
     # departures.info()
-    log.info('Departures dataframe shape : {}'.format(departures.shape))
+    log.info('Departures: {} rows x {} columns'.format(departures.shape[0], departures.shape[1]))
 
     national_arrivals = flights['arr_int'] == False
     arrivals = select_data_fields(flights[national_arrivals], constants.ARRIVAL_FIELDS)
     # arrivals.info()
-    log.info('Arrivals dataframe shape : {}'.format(arrivals.shape))
+    log.info('Arrivals:  {} rows x {} columns'.format(arrivals.shape[0], arrivals.shape[1]))
 
-    X_train, X_test, y_train, y_test = prepare_data(departures)
-    # print(X_train.shape)
-    # print(X_test.shape)
-    # print(y_train.shape)
-    # print(y_test.shape)
+    features, target = encode_cat_ordinals(departures)
+    X_train, X_test, y_train, y_test = dataset_split(features, target, constants.TEST_SIZE, constants.RANDOM_SEED)
+    apply_knn_classifier(X_train, X_test, y_train, y_test)
+
+    features, target = encode_cat_one_hot(departures)
+    X_train, X_test, y_train, y_test = dataset_split(features, target, constants.TEST_SIZE, constants.RANDOM_SEED)
     apply_knn_classifier(X_train, X_test, y_train, y_test)
 
 
 if __name__ == "__main__":
+    sys.setrecursionlimit(10000)
     log.basicConfig(filename='../log/analysis.log',
                     level=log.INFO,
                     format='%(asctime)s %(message)s',
