@@ -338,3 +338,6 @@ Vistas las diferencias entre clasificadores, posiblemente podríamos mejorar los
 
 Otras ideas que se nos ocurren para tratar de mejorar los algoritmos de clasificación pasan por una simplificación de los datos categoriales para reducir el número de niveles. Por ejemplo, los aeropuertos se podrían clasificar por tamaño y usar dicha categorización como atributo, en vez del nombre concreto del aeropuerto. 
 
+## Notas
+
+Para ver las instrucciones de instalación y utilización del programa consultar la [Wiki](https://github.com/InnocenceAllen/AENA_Info_Vuelos_V2/wiki/Home) de este proyecto.
