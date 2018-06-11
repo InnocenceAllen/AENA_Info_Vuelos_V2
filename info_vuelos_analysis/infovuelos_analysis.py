@@ -6,7 +6,7 @@ from pathlib import Path
 
 from info_vuelos_analysis import constants
 from info_vuelos_analysis.classifier import dataset_split, encode_cat_ordinals, encode_cat_one_hot, \
-    apply_knn_classifier, scale_data
+    apply_classifiers, scale_data
 from info_vuelos_analysis.infovuelos_preprocessing import get_airports, preprocessing
 from info_vuelos_analysis.model import DelayLevel, TimeLevel
 
@@ -79,15 +79,17 @@ def main():
     # temps = ['t_min','t_max']
     # departures.loc[:, temps] = scale_data(departures[temps])
     # arrivals.loc[:, temps] = scale_data(arrivals[temps])
-    # Converting categorical variables to numerical ones
     
+    # Converting categorical variables to numerical ones
+
     features, target = encode_cat_ordinals(departures)
     X_train, X_test, y_train, y_test = dataset_split(features, target, constants.TEST_SIZE, constants.RANDOM_SEED)
-    apply_knn_classifier(X_train, X_test, y_train, y_test)
+    apply_classifiers(X_train, X_test, y_train, y_test)
 
-    features, target = encode_cat_one_hot(departures)
-    X_train, X_test, y_train, y_test = dataset_split(features, target, constants.TEST_SIZE, constants.RANDOM_SEED)
-    apply_knn_classifier(X_train, X_test, y_train, y_test)
+    # features, target = encode_cat_one_hot(departures)
+    # X_train, X_test, y_train, y_test = dataset_split(features, target, constants.TEST_SIZE, constants.RANDOM_SEED)
+    # apply_knn_classifier(X_train, X_test, y_train, y_test)
+
 
 
 if __name__ == "__main__":
