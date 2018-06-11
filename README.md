@@ -57,6 +57,7 @@ En total, para caracterizar cada vuelo se utilizan 24 atributos, que son los sig
 | Campo | Descripción | Tipo de dato | Muestra |
 | ----- | ----------- | ---- | ------- |
 | flightNumber | Número de vuelo | String |	AEA7232 |
+| company | Compañía aérea | String | IBERIA
 | plane | Nombre del avión | String	| ATR-72 |
 | dep_date | Fecha de salida | Datetime	|13/04/18
 | dep_time | Hora de salida | Datetime	| 06:30
@@ -85,15 +86,15 @@ Sin embargo, no siempre hay valores en todos los campos, sobre todo cuando se tr
 
 Ahora nos centramos en otra problemática detectada: **la duplicidad de registros**. Efectivamente, debido a la forma en que se obtuvieron los datos (*web scraping* repetido a intervalos de una hora), cada vuelo puede aparecer registrado múltiples veces. Veamos un ejemplo, correspondiente al vuelo número AAL8531, del cual encontramos 5 registros en nuestro dataset:
  
-	AAL8531	 BOMBARDIER CRJ-1000	14/04/18	08:20	MADRID-BARAJAS ADOLFO SUΓREZ	MAD	4	Salida prevista a las 08:20	5	17	Nubes altas	810 - 859	 - 	14/04/18	09:25	ALICANTE-ELCHE	ALC	N	Llegada prevista a las 09:25	10	22	Nubes altas	NT1	4A	2018-04-14 03:22:24
+	AAL8531	 BOMBARDIER CRJ-1000	14/04/18	08:20	MADRID-BARAJAS ADOLFO SUAREZ	MAD	4	Salida prevista a las 08:20	5	17	Nubes altas	810 - 859	 - 	14/04/18	09:25	ALICANTE-ELCHE	ALC	N	Llegada prevista a las 09:25	10	22	Nubes altas	NT1	4A	2018-04-14 03:22:24
 	
-	AAL8531	 BOMBARDIER CRJ-1000	14/04/18	08:20	MADRID-BARAJAS ADOLFO SUΓREZ	MAD	4	Salida prevista a las 08:20	5	17	Nubes altas	810 - 859	 - 	14/04/18	09:25	ALICANTE-ELCHE	ALC	N	Llegada prevista a las 09:25	10	22	Nubes altas	NT1	4A	2018-04-14 04:23:26
+	AAL8531	 BOMBARDIER CRJ-1000	14/04/18	08:20	MADRID-BARAJAS ADOLFO SUAREZ	MAD	4	Salida prevista a las 08:20	5	17	Nubes altas	810 - 859	 - 	14/04/18	09:25	ALICANTE-ELCHE	ALC	N	Llegada prevista a las 09:25	10	22	Nubes altas	NT1	4A	2018-04-14 04:23:26
 
-	AAL8531	 BOMBARDIER CRJ-1000	14/04/18	08:20	MADRID-BARAJAS ADOLFO SUΓREZ	MAD	4	El vuelo ha despegado a las 08:14	5	17	Nubosidad variable	810 - 859	K89	14/04/18	09:25	ALICANTE-ELCHE	ALC	N	El vuelo ha aterrizado a las 09:17	10	22	Despejado	NT1	4A	2018-04-14 10:30:48
+	AAL8531	 BOMBARDIER CRJ-1000	14/04/18	08:20	MADRID-BARAJAS ADOLFO SUAREZ	MAD	4	El vuelo ha despegado a las 08:14	5	17	Nubosidad variable	810 - 859	K89	14/04/18	09:25	ALICANTE-ELCHE	ALC	N	El vuelo ha aterrizado a las 09:17	10	22	Despejado	NT1	4A	2018-04-14 10:30:48
 
-	AAL8531	 BOMBARDIER CRJ-1000	15/04/18	07:55	MADRID-BARAJAS ADOLFO SUΓREZ	MAD	4	Salida prevista a las 07:55	7	17	Lluvia dΓ©bil	810 - 859	 - 	15/04/18	09:00	ALICANTE-ELCHE	ALC	N	Llegada prevista a las 09:00	12	25	Nubes altas	NT1	4A	2018-04-15 02:13:00
+	AAL8531	 BOMBARDIER CRJ-1000	15/04/18	07:55	MADRID-BARAJAS ADOLFO SUAREZ	MAD	4	Salida prevista a las 07:55	7	17	Lluvia débil	810 - 859	 - 	15/04/18	09:00	ALICANTE-ELCHE	ALC	N	Llegada prevista a las 09:00	12	25	Nubes altas	NT1	4A	2018-04-15 02:13:00
 
-	AAL8531	 BOMBARDIER CRJ-1000	15/04/18	07:55	MADRID-BARAJAS ADOLFO SUΓREZ	MAD	4	Salida prevista a las 07:55	7	17	Lluvia dΓ©bil	810 - 859	 - 	15/04/18	09:00	ALICANTE-ELCHE	ALC	N	Llegada prevista a las 09:00	12	25	Nubes altas	NT1	4A	2018-04-15 03:14:52
+	AAL8531	 BOMBARDIER CRJ-1000	15/04/18	07:55	MADRID-BARAJAS ADOLFO SUAREZ	MAD	4	Salida prevista a las 07:55	7	17	Lluvia débil	810 - 859	 - 	15/04/18	09:00	ALICANTE-ELCHE	ALC	N	Llegada prevista a las 09:00	12	25	Nubes altas	NT1	4A	2018-04-15 03:14:52
 
 Lo primero que observamos es que en realidad se trata de 2 vuelos distintos, los tres primeros registros se corresponden con un vuelo programado el 14 de abril a las 8:20, y el segundo está programado el  15 de abril a las 7:55.
 La segunda cosa destacable que observamos es que en los dos primeros registros el estado del vuelo es "Salida prevista a las 8:20", mientras que el tercer registro indica "El vuelo ha despegado a las 8:14"
@@ -102,9 +103,7 @@ Estas características en la forma de registrar los datos tienen algunas implica
 1. En primer lugar, debemos detectar los registros que se corresponden con un mismo vuelo, para lo cual debemos tener cuenta tanto el número de vuelo como la fecha.
 2. En segundo lugar, dado un vuelo, debemos quedarnos únicamente con el último registro, pues será el que tenga los datos más actualizados.
 
-
-
-## Limpieza de los datos.
+## Limpieza y preprocesamiento de los datos.
 
 En general, los datos incluidos en el dataset elegido están bastante limpios, pues ya se realizó un pre-procesamiento  durante el proceso de obtención de los mismos (como parte del proceso de web scraping), sin embargo todavía hay algunos aspectos  a tener en cuenta para facilitar la utilización de los datos y sacarles el máximo partido posible.
 
@@ -124,25 +123,63 @@ Adicionalmente habrá que detectar otro posible circunstancia, la de vuelos canc
 	AAL8615	 BOMBARDIER CRJ-1000	15/04/18	07:10	MENORCA	MAH	1	Cancelado	12	14	Lluvia moderada	 - 	 - 	15/04/18	08:45	MADRID-BARAJAS ADOLFO SUΓREZ	MAD	4	Llegada prevista a las 08:45	5	17	Nubes altas	10	8	2018-04-15 00:09:59
 
 
-
 ### ¿Los datos contienen ceros o elementos vacíos? ¿Cómo gestionarías cada uno de estos casos?
 
 Ya hemos comentado antes que efectivamente existen valores faltantes, identificador por un guión en los registros de datos, independientemente de si es un campo de texto o numérico.
-Los elementos vacíos, identificados por un guión “-”, son transformados a tipo “nan” para procesarlos de una manera mas sencilla. Dependiendo del análisis que se realice, la fila que contenga elementos “nan” de la columna en cuestión, será eliminada. Mediante el comando “dropna” de la libreria “pandas”, se realiza esta operación. 
+Los elementos del dataset cuyo valor es un guión “-” son en realidad valores faltantes, por lo que nos interesará identificarlos como tales, ya que eso facilita su tratamiento. Por ejemplo, en **Python**, al identificar un valor como **nan** (o null) se facilita enormemente su tratamiento automático a través de funciones incluidas en librerías muy comunes como *numpy* y *pandas*. Por ejemplo, podremos aplicar una función para sustituir los valores faltantes por un valor determinado, o podemos eliminar las filas de un dataframe que contengan valores faltantes. Por ejemplo, mediante el comando “dropna” de la libreria “pandas”, podemos eliminar las filas de un dataset que tengan algún valor faltante, o un valor faltante en una determinada columna. Como ejemplo, este sería el código para eliminar los vuelos que no tuvieran valor de retraso en el despegue. 
+
 ```sh
-companies.dropna(subset=['company'])
+flights.dropna(subset=['dep_delay'])
 ```
 
-En este caso, las filas que contengan elementons “nan” de la columna “company” serán eliminados pues carecen de datos para realizar el análisis deseado.
+En este caso, las filas que contengan elementons “nan” en la columna “delay” serán eliminados pues carecen de datos para realizar el análisis deseado.
 Por otra parte, los datos que contienen ceros son considerados válidos en los análisis realizados.
 
 ### Identificación y tratamiento de valores extremos.
 
-Se detectaron extreme scores en el dataset. Debido a la relativa poca información que se presenta, estos son considerados como casos legítimos dentro de la población correcta. Cantidad de vuelos de determinada aerolínea o de determinado aeropuerto, son algunos de los casos presenciados dentro del dataset. Los extreme scores solo fueron tomados en cuenta en los análisis gráficos como parte de un grupo o subconjunto de datos que, aunque ínfimos, forman parte de la muestra.
+Se detectaron extreme scores en el dataset. Debido a la relativa poca información que se presenta, estos son considerados como casos legítimos dentro de la población correcta. Cantidad de vuelos de determinada aerolínea o de determinado aeropuerto, son algunos de los casos presenciados dentro del dataset. Los extreme scores solo fueron tomados en cuenta en los análisis gráficos como parte de un grupo o subconjunto de datos que, aunque ínfimos, forman parte de la	 muestra.
+
+No se han detectado valores extremos o anómalos en el conjunto de datos original, sin embargo, sí que han aparecido valores anómalos al calcular el retraso de los vuelos. El problema aparecía cuando un vuelo programado se retrasa más allá del día siguiente. En los datos capturados desde la Web de AENA no se indica tal circunstancia, pues solo indica fecha y hora programada, y hora real del suceso (obtenido a partir de la descripción del estado del vuelo). En estos casos el resultado de restar a la hora real  la hora programada es un valor muy bajo, que indica que el vuelo se ha adelantado muchas horas, cuando no es así. Pongo un ejemplo para que se entienda:
+
+	VLG3531	VUELING AIRLINES	AIRBUS A320	07/06/18	23:55	IBIZA	IBZ	1	El vuelo ha despegado a las 00:09	16	25	Despejado	01 - 03	6	08/06/18	00:55	BARCELONA-EL PRAT	BCN	T1	Llegada prevista a las 00:55	17	23	Nubosidad variable	T1_G	2	2018-06-08 00:42:35
+
+Al realizar el preprocesamiento de los datos, calcularíamos el retraso en la salida como los minutos entre las 00:09 y las 23:55, lo que nos da un retraso de -1426 minutos, es decir, parece que el vuelo se ha adelantado 11 casi 24 horas, cuando en realidad se ha atrasado 14 minutos. 
+
+Una vez detectado y analizado ese problema hemos introducido una heurística que permite adivinar cuando un adelanto aparente en realidad es un retraso. En concreto, tras revisar varios de los casos problemáticos hemos decidido que si un vuelo parece haberse adelantado más de 2 horas es que en realidad se ha retrasado al dia siguiente, con lo cual podemos calcular el retraso real. En el ejemplo mencionado dicho retraso es de 14 minutos.
+
+### Preprocesamiento
+
+Ya hemos comentdo algunos problemas encontrados en los datos, que resumimos aquí
+- Duplicados
+- Valores faltantes (identificados por los guiones "-")
+- Cálculo del retraso a partir de hora programada y hora real de un evento (despegue/aterrizaje), y problema detectado con los cambios de día
+
+Además pensamos que para los fines que nos hemos propuesto (análisis y predicción de retrasos), podemos ignorar algunos de los atributos. 
+
+También hemos añadido un atributo nuevo que indica si un aeropuerto es internacional, lo que nos ayudará a realizar los análisis posteriores.
+
+Por todo ello, hemos decidido implementar una fase de preprocesamiento, que recibe como entrada el dataset original en formato csv, y produce como salida otro dataset también en formato csv, pero de mucho menor tamaño, con las siguientes características:
+- No hay vuelos duplicados
+- Los valores faltantes correctamente identificados
+- Se han calculado los retrasos en minutos de salida y llegada, corregidos heurísticamente cuando parecen anómalos
+- Se han eliminado atributos que nos parecen poco relevantes, como el nombre del aeropuerto (es suficiente con el código), la terminal, la cienta de recogida de equipajes, etc.
+- Se han añadido atributos que identifican si los aeropuertos de salida o llegada son  internacionales.
+
+Este preprocesamiento lo realiza el módulo *infovuelos_preprocessing.py*. Para hacerse una idea de lo que supone este preprocesamiento diremos que el dataset utilizado al final tenía un tamaño de 24 MB, y el dataset resultado del preprocesamiento ocupa tan solo 1,2MB.
+
+También hemos añadido un dataset extra con información sobre los aeropuertos españoles, que nos parece puede resultar de utilidad, se denomina "airports.csv". En concreto, dicho archivo indica para cada aeropuerto su código, nombre y alias, número de pistas, y comunidad autónoma en la cual está situado. A continuación se incluye una pequeña muestra de dicho archivo.
+
+	code	name	alias	runways	region
+	MAD	Adolfo Suárez Madrid-Barajas	Barajas	4	Comunidad de Madrid
+	ABC	Albacete	Los Llanos	1	Castilla-La Mancha
+	ALC	Alicante-Elche	El Altet	1	Comunidad Valenciana
+	LEI	Almería	El Alquián	1	Andalucía
 
 ## Análisis de los datos.
+
 Para realizar el análisis de los datos ya tratados, hemos creado una función con tal de conseguir la cantidad de positivos, vuelos sin retraso, y negativos, vuelos con retraso, así como el tiempo total de retraso que ha tenido esa compañía. Con esta información podemos realizar predicciones para saber si un determinado vuelo tendrá retraso y también nos permite realizar un estudio para saber por aeropuertos de salida, llegada, compañías, códigos de vuelo el retraso que han tenido en un terminado periodo. Esto nos permitiría poner medidas para subsanar estos retrasos y saber la evolución que están teniendo.
-También, podemos obtener información respecto a como ha efectuado la climatología en los vuelos o conocer si una compañía ha aumentado o disminuido a nivel de transito de viajeros, teniendo en cuenta el tipo de avión, o de vuelos.
+También, podemos obtener información respecto a como ha influido la climatología en los vuelos o conocer si una compañía ha aumentado o disminuido a nivel de transito de viajeros, teniendo en cuenta el tipo de avión, o de vuelos.
+
 ### Selección de los grupos de datos que se quieren analizar/comparar (planificación de los análisis a aplicar).
 
 Para esta práctica hemos decidido centrarnos en 2 áreas de análisis:
@@ -169,15 +206,7 @@ Tras establecer el alcance de este proyecto hemos decidido utilizar las siguient
 
 ### Comprobación de la normalidad y homogeneidad de la varianza.
 ### Aplicación de pruebas estadísticas para comparar los grupos de datos. En función de los datos y el objetivo del estudio, aplicar pruebas de contraste de hipótesis, correlaciones, regresiones, etc.
-La principal pregunta que queremos responder es saber si un vuelo tendrá retraso, para ello hemos realizado dos clasificadores.
 
-El primero de ellos se trata de un clasificador bayesiano que hemos desarrollado utilizando los campos aeropuerto de salida, código de vuelo. No obstante está preparado para utilizar los parámetros que se desee. Los resultados que obtenemos teniendo un total de 10338 vuelos distribuidos en dos conjuntos de datos. 85% de datos para training y el 15% restante para test. El resultado obtenido es el siguiente.
-
-**Accuracy:** 0.82%
-
-**Precision:** 0.85%
-
-El segundo clasificador hemos utilizado la librería sklearn....
 
 ## Representación de los resultados a partir de tablas y gráficas.
 
@@ -224,4 +253,42 @@ Centrándose un poco más en las compañías, resulta llamativo saber cuáles de
 
 
 ## Resolución del problema. A partir de los resultados obtenidos, ¿cuáles son las conclusiones? ¿Los resultados permiten responder al problema?
+
+La principal pregunta que queremos responder es saber si un vuelo tendrá retraso, para ello hemos realizado dos clasificadores.
+
+El primero de ellos se trata de un clasificador bayesiano que hemos desarrollado utilizando los campos aeropuerto de salida y código de vuelo. No obstante está preparado para utilizar los parámetros que se desee. Los resultados que obtenemos teniendo un total de 10338 vuelos distribuidos en dos conjuntos de datos. 85% de datos para training y el 15% restante para test. El resultado obtenido es el siguiente.
+
+**Accuracy:** 0.82%
+
+**Precision:** 0.85%
+
+Con estos resultados podemos afirmar que efectivamente, hemos sido capaces de predecir la probabilidad con bastante precisión la probabilidad de sufrir un retraso en un vuelo.
+En una segunda fase hemos intentado ser más precisos y en ver de limitarnos a predecir si un vuelo sufrirá retraso o no, vamos a intentar estimar un cierto nivel de retraso, para lo cual vamos a considerar cuatro niveles de retraso:
+
+| Nivel de retraso | Descripción|
+| --------------------- | --------------- | 
+| SIN_RETRASO | Retraso inferior a 5 minutos |
+| RETRASO LEVE | Retraso entre 5 y 25 minutos |
+| RETRASO MEDIO | Retraso entre 25 y 60 minutos |
+| RETRASO ELEVADO | Rretraso superior a la hora |
+
+En esta ocasión, en vez de limitarnos a 2 variables, vamos a utilizar 7 variables como características o atributos para realizar la clasificación de los vuelos, y aplicaremos los algoritmos de clasifcación tanto para las salidas como para las llegadas.
+- Compañía aérea
+- Modelo de avión
+- Hora de salida/llegada
+- Aeropuerto de salida/llegada
+- Temperatura máxima y mínima en origen/destino
+- Clima en origen/destino
+
+En vez de aplicar un único clasificador vamos a utilizar un conjunto de clasificadores obtenidos en la librería **Scikit-Learn (Sklearn)**
+0. Nearest Neighbors
+1. Linear SVM
+2. RBF SVM
+3. Decision Tree
+4. Random Forest
+5. Neural Net (Perceptron Multicapa)
+6. AdaBoost
+7. Naive Bayes
+8. QDA
+
 
