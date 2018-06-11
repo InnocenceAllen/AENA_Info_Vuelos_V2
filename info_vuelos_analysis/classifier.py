@@ -17,7 +17,6 @@ from sklearn.tree import DecisionTreeClassifier
 
 from info_vuelos_analysis.model import DelayLevel
 
-
 names = ['Nearest Neighbors', 'Linear SVM', 'RBF SVM',
          # 'Gaussian Process',
          'Decision Tree', 'Random Forest', 'Neural Net', 'AdaBoost',
@@ -27,11 +26,11 @@ no_sparse = ['Naive Bayes', 'QDA']
 classifiers = [
     KNeighborsClassifier(3),
     SVC(kernel='linear', C=0.025),
-    SVC(gamma=2, C=1),
+    SVC(),
     # GaussianProcessClassifier(1.0 * RBF(1.0)),
-    DecisionTreeClassifier(max_depth=5),
-    RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),
-    MLPClassifier(alpha=1),
+    DecisionTreeClassifier(),
+    RandomForestClassifier(),
+    MLPClassifier(activation='logistic', solver='sgd', learning_rate='adaptive'),
     AdaBoostClassifier(),
     GaussianNB(),
     QuadraticDiscriminantAnalysis()]
@@ -74,18 +73,21 @@ def scale_data(data):
     return scaled_data
 
 
-def apply_classifiers(X_train, X_test, y_train, y_test, sparse = False):
+def apply_classifiers(X_train, X_test, y_train, y_test, concept, sparse=False):
     scores = []
     for name, model in zip(names, classifiers):
         log.info("Applyng {} classifier".format(name))
         if not sparse or not name in no_sparse:
             model.fit(X_train, y_train)
             test_score = model.score(X_test, y_test)
+            train_score = model.score(X_train, y_train)
             scores.append(test_score)
+            log.info("Training accuray for {} = {}".format(name, train_score))
             log.info("Test accuray for {} = {}".format(name, test_score))
-        # accuracy_plot(X_train, y_train, clf, 'Training')
-        # accuracy_plot(X_test, y_test, model, name, 'Testing')
-    accuracy_comparison_plot(scores, names)
+            # accuracy_plot(X_train, y_train, model, name, concept)
+            accuracy_plot(X_test, y_test, model, name, concept)
+    accuracy_comparison_plot(scores, concept)
+
 
 def accuracy_plot(features, target, model, model_name, set):
     # Find the training and testing accuracies by target value (delay encoded as DelayLevel)
@@ -109,11 +111,12 @@ def accuracy_plot(features, target, model, model_name, set):
     plt.title('{} Accuracy predicting Delay Levels ({})'.format(model_name, set), alpha=0.8)
     plt.show()
 
-def accuracy_comparison_plot(scores, names):
 
+def accuracy_comparison_plot(scores, concept):
     plt.figure()
     plt.plot(scores)
     plt.ylabel('Accuracy')
     plt.xlabel('Classifier')
-    plt.title("Comparison of testing accuracy for multiple classifiers")
+    # plt.xticks(names)
+    plt.title("Comparison of testing accuracy for multiple classifiers\n{}".format(concept))
     plt.show()
