@@ -73,7 +73,7 @@ def plot(parameter,keyList,positiveList,negativeList):
     bar(x, counts[0], width=0.2, color="#0c04e5", label="Sin Retraso %")
     bar(x2,counts[1], width=0.2, color="#ef0202", label="Con Retraso %")
     legend()
-    savefig(parameter+'_plot.png')
+    savefig("..\\images\\"+parameter+'_plot.png')
 
 
 
@@ -167,11 +167,19 @@ def validation(resultDict, validatioDict):
 
     print("truePositive: "+str(truePositive)+" trueNegative "+str(trueNegative)+" falsePositive "+str(falsePositive)+" falseNegative "+str(falseNegative));
     accuracy=(truePositive+trueNegative)/float(truePositive+trueNegative+falsePositive+falseNegative)
+    precision=truePositive/float(truePositive+falsePositive)
     print("accuracy: "+str(accuracy));
+    print("precision: " + str(precision));
     return truePositive,trueNegative,falsePositive,falseNegative;
 
 
-
+def classifier(flights):
+    print(len(flights))
+    nrows = round(len(flights) * 0.15)
+    flightsDict = analyze(flights, 'flightNumber', 'dep_delay');
+    trainingDic = training(flights[nrows:])
+    resultDict = calculate(trainingDic, flights[:nrows - 1])
+    validation(resultDict, flightsDict)
 
 
 
@@ -181,7 +189,8 @@ if __name__ == "__main__":
 
     flights = pd.read_table('flights.csv', sep=';')
     flights = flights.drop_duplicates(['flightNumber', 'dep_date'], keep='last')
-    '''  flightsDict=analyze(flights,'flightNumber','dep_delay');
+
+    flightsDict=analyze(flights,'flightNumber','dep_delay');
     resultado = sorted(flightsDict.items(), key=lambda x: x[1]['negativo'], reverse=True)
     print(resultado)
     keyList, positiveList, negativeList = result(flightsDict,1)
@@ -192,11 +201,9 @@ if __name__ == "__main__":
     resultado = sorted(flightsDict.items(), key=lambda x: x[1]['negativo'], reverse=True)
     print(resultado)
     keyList, positiveList, negativeList = result(flightsDict, 1)
-    plot('dep_airport_code', keyList, positiveList, negativeList)'''
-    flightsDict = analyze(flights, 'flightNumber', 'dep_delay');
-    trainingDic= training(flights[50:])
-    resultDict=calculate(trainingDic,flights[:49])
-    validation=validation(resultDict,flightsDict)
+    plot('dep_airport_code', keyList, positiveList, negativeList)
+
+    classifier(flights)
 
 
 
