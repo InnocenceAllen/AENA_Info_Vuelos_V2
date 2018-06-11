@@ -88,15 +88,10 @@ def main():
     # arrivals.info()
     log.info('Arrivals:  {} rows x {} columns'.format(arrivals.shape[0], arrivals.shape[1]))
 
-    apply_analysis(departures, "Departures")
+    # apply_analysis(departures, "Departures")
     apply_analysis(arrivals, "Arrivals")
 
-
-
-
-
 if __name__ == "__main__":
-    sys.setrecursionlimit(10000)
     log.basicConfig(filename='../log/analysis.log',
                     level=log.INFO,
                     format='%(asctime)s %(message)s',

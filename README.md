@@ -175,6 +175,8 @@ También hemos añadido un dataset extra con información sobre los aeropuertos 
 	ALC	Alicante-Elche	El Altet	1	Comunidad Valenciana
 	LEI	Almería	El Alquián	1	Andalucía
 
+Además del preprocesamiento, hemos tenido que realizar un tratamiento adicional de los datos para poder aplicar algunos algoritmos de aprendizaje automático, tal y como describimos en la última sección de este documento.
+
 ## Análisis de los datos.
 
 Para realizar el análisis de los datos ya tratados, hemos creado una función con tal de conseguir la cantidad de positivos, vuelos sin retraso, y negativos, vuelos con retraso, así como el tiempo total de retraso que ha tenido esa compañía. Con esta información podemos realizar predicciones para saber si un determinado vuelo tendrá retraso y también nos permite realizar un estudio para saber por aeropuertos de salida, llegada, compañías, códigos de vuelo el retraso que han tenido en un terminado periodo. Esto nos permitiría poner medidas para subsanar estos retrasos y saber la evolución que están teniendo.
@@ -203,28 +205,26 @@ Tras establecer el alcance de este proyecto hemos decidido utilizar las siguient
 - Temperatura Max y Min, en grados (Integer)
 - Descripción textual del clima (String)
 
+## Anaĺisis estadístico y visualización de datos
 
-### Comprobación de la normalidad y homogeneidad de la varianza.
-### Aplicación de pruebas estadísticas para comparar los grupos de datos. En función de los datos y el objetivo del estudio, aplicar pruebas de contraste de hipótesis, correlaciones, regresiones, etc.
+No hemos realizado pruebas de contraste de hipótesis o similares, ya que nuestra intención es utilizar algoritmos de aprendizaje automático para resolver el principal problema que nos hemos propuesto: la predicción de retrasos.
 
-
-## Representación de los resultados a partir de tablas y gráficas.
+Sin embargo si que hemos realizado un análisis descriptivo de los datos, pero en vez de mostrarlos en forma textual o narrativa, los vamos a mostrar mediante gŕaficas, 
 
 Hemos querido realizar un estudio para conocer los retrasos que han habido por aeropuerto, código de vuelo o según el parámetro que se solicite. Esto lo hemos realizado contabilizando la cantidad de retrasos que ha habido por vuelo, según el parámetro dado.
 
-![Retrasos por flightNumber](images/flightNumber_plot.png)
+![Retrasos por número de vuelo](images/flightNumber_plot.png)
 
 Como podéis observar, en la gráfica se visualizan los retrasos respecto el código de  6 vuelos. Como veis un par de vuelos tienen un 100% de retrasos.
 
-![Retrasos por company](images/company_plot.png)
+![Retrasos por compañía](images/company_plot.png)
 En la gráfica anterior se puede apreciar el retraso de 10 compañías y deslumbrar el compromiso que estas tienen con la puntualidad.
 
-![Retrasos por dep_airport](images/dep_airport_code_plot.png)
+![Retrasos por aeropuerto de origen](images/dep_airport_code_plot.png)
 
 En esta gráfica podéis ver los retrasos que ha habido respecto los aeropuertos de origen.
 
 Con un conjunto más amplio podríamos realizar un estudio de la evolución que ha habido tras aplicar algunas mejoras o penalizaciones en los aeropuertos o aerolíneas.
-
 
 Los horarios en que despegan los vuelos varían mucho dentro de las 24 horas del día. Para una mejor noción del momento en que ocurren estos vuelos, se agrupan en tres subconjuntos, mañana, tarde y noche. De esta manera se puede conocer en que momento del día ocurren más vuelos. Durante este período de tiempo, suelen existir mas vuelos en el horario de la mañana que en cualquier otro momento.
 
@@ -252,7 +252,7 @@ Centrándose un poco más en las compañías, resulta llamativo saber cuáles de
 ![Vuelos por horarios](images/pie.png)
 
 
-## Resolución del problema. A partir de los resultados obtenidos, ¿cuáles son las conclusiones? ¿Los resultados permiten responder al problema?
+## Resolución del problema y conclusiones
 
 La principal pregunta que queremos responder es saber si un vuelo tendrá retraso, para ello hemos realizado dos clasificadores.
 
@@ -263,11 +263,12 @@ El primero de ellos se trata de un clasificador bayesiano que hemos desarrollado
 **Precision:** 0.85%
 
 Con estos resultados podemos afirmar que efectivamente, hemos sido capaces de predecir la probabilidad con bastante precisión la probabilidad de sufrir un retraso en un vuelo.
+
 En una segunda fase hemos intentado ser más precisos y en ver de limitarnos a predecir si un vuelo sufrirá retraso o no, vamos a intentar estimar un cierto nivel de retraso, para lo cual vamos a considerar cuatro niveles de retraso:
 
 | Nivel de retraso | Descripción|
 | --------------------- | --------------- | 
-| SIN_RETRASO | Retraso inferior a 5 minutos |
+| SIN RETRASO | Retraso inferior a 5 minutos |
 | RETRASO LEVE | Retraso entre 5 y 25 minutos |
 | RETRASO MEDIO | Retraso entre 25 y 60 minutos |
 | RETRASO ELEVADO | Rretraso superior a la hora |
@@ -291,4 +292,49 @@ En vez de aplicar un único clasificador vamos a utilizar un conjunto de clasifi
 7. Naive Bayes
 8. QDA
 
+### Tratamiento de los datos
+
+La mayoría de los algoritmos de aprendizaje automático para clasificación trabajan con datos numéricos, no con datos categoriales. Eso significa que para usar valores categoriales, como el aeropuerto o la compañía de un vuelo, necesitaremos convertirlos a valores numéricos.
+
+El mecanismo más sencillo es la convesión de las categorías en una **escala ordinal**. Hemos realizado dicho tratamiento sobre las cuatro variables categoriales que tenemos: company, plane, airport y weather. Para ello hemos utilizado la clase **LabelEncoder** proporcionada por la librería **Sklearn**. 
+
+En segundo lugar, para tratar de mejorar los resultados hemos utilizado el método **One Hot**, proporcionado por la clase denominada **OneHotEncoder**. Este método crea una nueva columna por cada posible valor de una variable categorial. El resultado es una explosión dimensional, que en nuestro caso se ha traducido en pasar de 7 dimensiones, 4 de ellas categoriales, a más de 200, ya que algunos atributos tienen muchos valores posibles (aeropuertos, compañías y modelos de avión). Y además, dicha transformación no ha producido mejores resultados, e incluso ha llegado a empeorarlos ligeramente.
+
+Otra técnica que hemos aplicado es la **discretización**, en particular, hemos discretizado la hora, pasando de una representación basada en horas y minutos a 4 valores correspondientes a las franjas de *madrugada*, *mañana*, *tarde*, y *noche*. También hemos discretizado la variable objetivo, aquella que queremos clasificar, es decir, el nivel de retraso, siguiendo las reglas especificadas anteriormente (Sin retraso, retraso leve, medio o elevado).
+
+Finalmente,  hemos probado una técnica de **escalado**, en este caso sobre los variables numéricas: temperatura mínima y máxima. En concreto, las hemos normalizado, sin embargo el resultado no ha servido para mejorar los resultados del aprendizaje automático, así es que finalmente no lo hemos utilizado.
+
+### Resultados de los clasificadores
+
+La siguiente imagen muestra los diferentes niveles de accuracy obtenidos con los 9 clasificadores probados, sobre los vuelos, pero limitados a la información de las salidas o despegues.
+
+![ Comparativa de clasificadores para las salidas](/home/mario/Workspace/UOC-TiCiViDa/AENA_Info_Vuelos_V2/images/departures-classifiers.png  "Comparativa de clasificadores para las salidas")
+
+Como se puede ver el mejor clasificador ha resultado ser el #6, que como vemos en el listado anterior ha empleado el algoritmo AdaBoost, con una precisión media de 0.47.
+
+En la siguiente imagen podemos ver con más detalle como se ha repartido dicha precisión entre los diferentes valores de la variable objetivo (nivel de retraso)
+
+![Precisión del clasificador AdaBoost para las salidas](/home/mario/Workspace/UOC-TiCiViDa/AENA_Info_Vuelos_V2/images/departures-adaboost.png) 
+
+Este clasificador como vemos funcioa muy bien para predecir cuando no va a producirse retraso, pero falla bastante prediciendo el nivel de retraso que podría producirse en caso contrario.
+
+Otro clasificador más equilibrado en cuanto a su precisión ha resultado ser el de Decision Trees, con el siguiente resultado
+
+![Precisión del clasificador DecisionTree para las salidas](/home/mario/Workspace/UOC-TiCiViDa/AENA_Info_Vuelos_V2/images/departures-decision_tree.png) 
+
+A continuación vemos la comparativa en términos de precisión media de los diferentes clasificadores para las llegadas.
+
+![ Comparativa de clasificadores para las llegadas](/home/mario/Workspace/UOC-TiCiViDa/AENA_Info_Vuelos_V2/images/arrivals-classifiers.png  "Comparativa de clasificadores para las llegadas")
+
+Como podemos ver en la gráfica, en este caso el mejor clasificador general ha sido el 5 y el 7,  Perceptrón multicapa y Naive Bayes, , con precisiones medias cercanas a 0.65, pero si analizamos la precisión separada por categorías veremos que en ambos casos toda la precisión se concentra en acertar cuando no se produce retraso, pero falla estrepitosamente en los otros casos. Se muestra el caso del Naive Bayes como ejemplo.
+
+![Precisión del clasificador Naive Bayes para las llegadas](/home/mario/Workspace/UOC-TiCiViDa/AENA_Info_Vuelos_V2/images/arrivals-naive_bayes.png)
+
+El clasificador más equilibrado en este caso ha resultado ser de nuevo el Decision Tree, como vemos en la siguiente gráfica.
+
+![Precisión del clasificador Decision Tree para las llegadas](/home/mario/Workspace/UOC-TiCiViDa/AENA_Info_Vuelos_V2/images/arrivals-decision_tree.png)
+
+Vistas las diferencias entre clasificadores, posiblemente podríamos mejorar los resultados utilizando un Ensemble, es decir, una combinación de varios clasificadores.
+
+Otras ideas que se nos ocurren para tratar de mejorar los algoritmos de clasificación pasan por una simplificación de los datos categoriales para reducir el número de niveles. Por ejemplo, los aeropuertos se podrían clasificar por tamaño y usar dicha categorización como atributo, en vez del nombre concreto del aeropuerto. 
 
