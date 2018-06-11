@@ -56,7 +56,7 @@ def main():
 
     log.info('Loading flights')
     flights = pd.read_csv(filename, sep=constants.CSV_DELIMITER)
-    log.info('Loaded: {} rows x {} columns'.format(flights.shape[0], flights.shape[1]))
+    log.info('Flights loaded: {} rows x {} columns'.format(flights.shape[0], flights.shape[1]))
 
     # Prepare data for classification
 
@@ -66,11 +66,13 @@ def main():
 
     national_departures = flights['dep_int'] == False
     departures = select_data_fields(flights[national_departures], constants.DEPARTURE_FIELDS)
-    departures.info()
+    # departures.info()
+    log.info('Departures dataframe shape : {}'.format(departures.shape))
 
     national_arrivals = flights['arr_int'] == False
     arrivals = select_data_fields(flights[national_arrivals], constants.ARRIVAL_FIELDS)
-    arrivals.info()
+    # arrivals.info()
+    log.info('Arrivals dataframe shape : {}'.format(arrivals.shape))
 
     X_train, X_test, y_train, y_test = prepare_data(departures)
     # print(X_train.shape)
@@ -85,4 +87,5 @@ if __name__ == "__main__":
                     level=log.INFO,
                     format='%(asctime)s %(message)s',
                     datefmt='%d/%m/%Y %I:%M:%S')
+    log.getLogger().addHandler(log.StreamHandler())
     main()
