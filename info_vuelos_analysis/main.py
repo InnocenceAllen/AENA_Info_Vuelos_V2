@@ -103,12 +103,85 @@ def result(flightsDict,printable):
                 negativoPercent) + "% Retraso medio " + str(retrasoMedio) + " Min");
 
     return keyList,positiveList,negativeList;
+
+def training(flightsDict):
+    trainingDict = dict()
+    item = analyze(flightsDict, 'flightNumber', 'dep_delay');
+    trainingDict.setdefault('flightNumber',item);
+
+    item = analyze(flightsDict, 'dep_airport_code', 'dep_delay');
+    trainingDict.setdefault('dep_airport_code', item);
+
+    return trainingDict;
+
+#flightDic pasar como el anterior, con parametro / en este caso trainingDict no se ha calculado con ninguno del training
+def calculate(trainingDict,flights):
+    tmpDict = dict()
+
+    #parametro dep_airport_code,flightNumber etc
+
+    for paramKey in trainingDict.keys():
+        for index, row in flights.iterrows():
+            try:
+              if  paramKey in trainingDict:
+                vuelo=trainingDict[paramKey][row[paramKey]]
+                positive=vuelo['positivo']
+                negative = vuelo['negativo']
+                pdelay=negative/float(positive+negative)
+                if row['flightNumber'] in tmpDict:
+                    tmpDict[row['flightNumber']]=tmpDict[row['flightNumber']]*pdelay
+                else:
+                    tmpDict.setdefault(row['flightNumber'],pdelay)
+            except:
+                pass #significa que de este parametro no tenemos informacion. (cambiar)
+
+    return tmpDict;
+
+
+def validation(resultDict, validatioDict):
+
+    truePositive=0
+    trueNegative=0
+    falsePositive=0
+    falseNegative=0
+
+
+    for flightKey, pdelay in resultDict.items():
+            total=validatioDict[flightKey]['positivo']+validatioDict[flightKey]['negativo']
+            if (total==0):#valor por defecto que damos si no hay datos
+                total=0.5
+            pdelayValidation=validatioDict[flightKey]['negativo']/float(total)
+            if pdelay>0.5:
+                if pdelayValidation>0.5:
+                    truePositive+=1
+                else:
+                    falsePositive+=1
+
+            else:
+                if pdelayValidation<=0.5:
+                    trueNegative+=1
+                else:
+                    falseNegative+=1
+
+
+
+    print("truePositive: "+str(truePositive)+" trueNegative "+str(trueNegative)+" falsePositive "+str(falsePositive)+" falseNegative "+str(falseNegative));
+    accuracy=(truePositive+trueNegative)/float(truePositive+trueNegative+falsePositive+falseNegative)
+    print("accuracy: "+str(accuracy));
+    return truePositive,trueNegative,falsePositive,falseNegative;
+
+
+
+
+
+
+
 if __name__ == "__main__":
 
 
     flights = pd.read_table('flights.csv', sep=';')
     flights = flights.drop_duplicates(['flightNumber', 'dep_date'], keep='last')
-    flightsDict=analyze(flights,'flightNumber','dep_delay');
+    '''  flightsDict=analyze(flights,'flightNumber','dep_delay');
     resultado = sorted(flightsDict.items(), key=lambda x: x[1]['negativo'], reverse=True)
     print(resultado)
     keyList, positiveList, negativeList = result(flightsDict,1)
@@ -119,7 +192,11 @@ if __name__ == "__main__":
     resultado = sorted(flightsDict.items(), key=lambda x: x[1]['negativo'], reverse=True)
     print(resultado)
     keyList, positiveList, negativeList = result(flightsDict, 1)
-    plot('dep_airport_code', keyList, positiveList, negativeList)
+    plot('dep_airport_code', keyList, positiveList, negativeList)'''
+    flightsDict = analyze(flights, 'flightNumber', 'dep_delay');
+    trainingDic= training(flights[50:])
+    resultDict=calculate(trainingDic,flights[:49])
+    validation=validation(resultDict,flightsDict)
 
 
 
