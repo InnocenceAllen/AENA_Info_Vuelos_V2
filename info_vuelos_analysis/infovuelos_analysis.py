@@ -1,11 +1,12 @@
-from info_vuelos_analysis import constants
-from info_vuelos_analysis.classifier import svm
-from info_vuelos_analysis.infovuelos_preprocessing import get_airports, preprocessing
 import logging as log
 import pandas as pd
-import numpy as np
+
 from pathlib import Path
-from info_vuelos_analysis.model import DelayLevel
+
+from info_vuelos_analysis import constants
+from info_vuelos_analysis.classifier import prepare_data, apply_knn_classifier
+from info_vuelos_analysis.infovuelos_preprocessing import get_airports, preprocessing
+from info_vuelos_analysis.model import DelayLevel, TimeLevel
 
 
 def get_delay_level(delay_in_minutes):
@@ -19,6 +20,18 @@ def get_delay_level(delay_in_minutes):
         return DelayLevel.HIGH_DELAY.value
 
 
+def get_time_level(time):
+    hour = int(time.split(":")[0])
+    if hour <= constants.TIME_LEVEL_THRESHOLDS['NIGHT']:
+        return TimeLevel.NIGHT.value
+    elif hour <= constants.TIME_LEVEL_THRESHOLDS['MORNING']:
+        return TimeLevel.MORNING.value
+    elif hour <= constants.TIME_LEVEL_THRESHOLDS['AFTERNOON']:
+        return TimeLevel.AFTERNOON.value
+    else:
+        return TimeLevel.EVENING.value
+
+
 def select_data_fields(flights, fields):
     # df = flights[fields].dropna()
     df = flights[fields].copy().dropna()
@@ -28,6 +41,7 @@ def select_data_fields(flights, fields):
     # valid_rows = df['delay'].notnull()
     # df.loc[df['delay'].notnull(), 'delay'] = df.apply(lambda row: get_delay_level(row['delay']), axis=1)
     df.loc[:, 'delay'] = df.apply(lambda row: get_delay_level(row['delay']), axis=1)
+    df.loc[:, 'time'] = df.apply(lambda row: get_time_level(row['time']), axis=1)
     return df
 
 
@@ -46,8 +60,6 @@ def main():
 
     # Prepare data for classification
 
-    # flights.info()
-
     # split data to deal separately with departures and arrivals. Due to the lack of
     # data when an airport is international we will consider only Spanish airports, either at the departure
     # or at the arrival
@@ -60,7 +72,12 @@ def main():
     arrivals = select_data_fields(flights[national_arrivals], constants.ARRIVAL_FIELDS)
     arrivals.info()
 
-    svm(departures)
+    X_train, X_test, y_train, y_test = prepare_data(departures)
+    # print(X_train.shape)
+    # print(X_test.shape)
+    # print(y_train.shape)
+    # print(y_test.shape)
+    apply_knn_classifier(X_train, X_test, y_train, y_test)
 
 
 if __name__ == "__main__":
