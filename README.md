@@ -128,10 +128,17 @@ Adicionalmente habrá que detectar otro posible circunstancia, la de vuelos canc
 ### ¿Los datos contienen ceros o elementos vacíos? ¿Cómo gestionarías cada uno de estos casos?
 
 Ya hemos comentado antes que efectivamente existen valores faltantes, identificador por un guión en los registros de datos, independientemente de si es un campo de texto o numérico.
+Los elementos vacíos, identificados por un guión “-”, son transformados a tipo “nan” para procesarlos de una manera mas sencilla. Dependiendo del análisis que se realice, la fila que contenga elementos “nan” de la columna en cuestión, será eliminada. Mediante el comando “dropna” de la libreria “pandas”, se realiza esta operación. 
+```sh
+companies.dropna(subset=['company'])
+```
+
+En este caso, las filas que contengan elementons “nan” de la columna “company” serán eliminados pues carecen de datos para realizar el análisis deseado.
+Por otra parte, los datos que contienen ceros son considerados válidos en los análisis realizados.
 
 ### Identificación y tratamiento de valores extremos.
 
-No hemos identificado valores extremos.
+Se detectaron extreme scores en el dataset. Debido a la relativa poca información que se presenta, estos son considerados como casos legítimos dentro de la población correcta. Cantidad de vuelos de determinada aerolínea o de determinado aeropuerto, son algunos de los casos presenciados dentro del dataset. Los extreme scores solo fueron tomados en cuenta en los análisis gráficos como parte de un grupo o subconjunto de datos que, aunque ínfimos, forman parte de la muestra.
 
 ## Análisis de los datos.
 Para realizar el análisis de los datos ya tratados, hemos creado una función con tal de conseguir la cantidad de positivos, vuelos sin retraso, y negativos, vuelos con retraso, así como el tiempo total de retraso que ha tenido esa compañía. Con esta información podemos realizar predicciones para saber si un determinado vuelo tendrá retraso y también nos permite realizar un estudio para saber por aeropuertos de salida, llegada, compañías, códigos de vuelo el retraso que han tenido en un terminado periodo. Esto nos permitiría poner medidas para subsanar estos retrasos y saber la evolución que están teniendo.
@@ -163,5 +170,31 @@ Tras establecer el alcance de este proyecto hemos decidido utilizar las siguient
 ### Comprobación de la normalidad y homogeneidad de la varianza.
 ### Aplicación de pruebas estadísticas para comparar los grupos de datos. En función de los datos y el objetivo del estudio, aplicar pruebas de contraste de hipótesis, correlaciones, regresiones, etc.
 ## Representación de los resultados a partir de tablas y gráficas.
+Los horarios en que despegan los vuelos varían mucho dentro de las 24 horas del día. Para una mejor noción del momento en que ocurren estos vuelos, se agrupan en tres subconjuntos, mañana, tarde y noche. De esta manera se puede conocer en que momento del día ocurren más vuelos. Durante este período de tiempo, suelen existir mas vuelos en el horario de la mañana que en cualquier otro momento.
+
+![Vuelos por horarios](images/por_horario.png)
+
+Otro analisis de grupos que se pretendía realizar era la cantidad de vuelos que deteminado aeropuerto recibía. Como los resultados son de un corto período de tiempo, una mejor representación del total puede ser mediante la frecuencia relativa de esa cantidad.  La siguiente gráfica muestra los resultados obtenidos.
+
+![Vuelos por horarios](images/frec_vuelos.png)
+
+Dentro de los datos recopilados se encontraban los referentes al estado meteorológico al momento de salida y llegada de los vuelos. En un primer momento se agruparon estos elementos arrojando la siguiente gráfica.
+
+![Vuelos por horarios](images/est_tiempo.png)
+
+Sin embargo, esta información es solo la base. Debido a que los datos fueron obtenidos en un tiempo bastante corto y en una temporada específica, la información obtenida refleja precisamente el comportamiento del clima para las fechas acotadas. Una muestra anual puede aportar información más amplia. No obstante, durante ese período de tiempo, existieron retrasos en los vuelos y mostrar  la cantidad de vuelos retrasados notablemente de acuerdo a determinado clima, puede darnos una noción visual, primeriza, de la posible causa de estos retrasos. La siguiente gráfica muestra estos resultados, concibiéndose como “grandes retrasos”, los vuelos que se demoraron mas de 120 minutos respecto a la salida fijada. 
+
+![Vuelos por horarios](images/en_retrasos.png)
+
+Otro de los aspectos interesantes puede ser conocer el rumbo de los vuelos y de esta manera conocer los destinos de estos, en este caso y a modo general, nacional o internacional. La gráfica muestra un mayor porciento de vuelos que arriban a aeropuertos internacionales. Ya sea porque mas ciudadanos españoles suelen visitar lares foráneos o porque los turistas están regresando a sus hogares, existen mas vuelos que se dirigen fuera del territorio español. De cualquier manera, la muestra es demasiado pequeña para sacar cualquier tipo de conlcusión. 
+
+![Vuelos por horarios](images/frec_nac_inter.png)
+
+Centrándose un poco más en las compañías, resulta llamativo saber cuáles de estas son las mas utilizadas o las que más naves aeréas presentan dentro del territorio español. Según la gráfica, exite un predomino de los vuelos de las aerolíneas españolas. 
+
+
+![Vuelos por horarios](images/pie.png)
+
+
 ## Resolución del problema. A partir de los resultados obtenidos, ¿cuáles son las conclusiones? ¿Los resultados permiten responder al problema?
 
